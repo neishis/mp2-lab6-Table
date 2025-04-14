@@ -7,6 +7,7 @@ template<typename TKey, typename TVal>
 class SortTable : public ScanTable <TKey, TVal>
 {
 public:
+
 	SortTable(int _size) : ScanTable(_size) {};
 
 	bool Find(Tkey key) //Поиск в упорядоченной таблице
@@ -105,5 +106,42 @@ public:
 		if (start < left) QSortRec(start, Left);
 		if (right < finish) QSortRec(Right, finish);
 
+	}
+
+	void Merge(int left, int middle, int right) {
+		int i = left, j = middle, k = left;
+		while (i <= middle && j <= right) {
+			if (pRec[i].key <= pRec[j].key) tmpArr[k] = pRec[i];
+			else {
+				tmpArr[k] = pRec[j];
+				j++;
+			}
+			k++;
+		}
+		if (i <= middle) {
+			while (i <= middle) {
+				tmpArr[k] = pRec[i];
+				k++;
+				i++;
+			}
+		}
+		else {
+			while (j <= right) {
+				tmpArr[k] = pRec[j];
+				k++;
+				j++;
+			}
+		}
+		for (int i = left; i <= right; i++) {
+			pRec[i] = tmpArr[i];
+		}
+	}
+
+	void MergeSort(int left, int right) {
+		if (left == right) return;
+		int middle = (left + right) / 2;
+		MergeSort(left, middle);
+		MergeSort(middle + 1, right);
+		Merge(left, middle, right);
 	}
 };

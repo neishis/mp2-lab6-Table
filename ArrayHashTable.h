@@ -49,6 +49,39 @@ public:
 		return false;
 	}
 
+	bool Insert(Record& rec) {
+		if (Find(rec.key)) throw - 1;
+		pRec[Curr] = rec;
+		DataCount++;
+		Eff++;
+		return true;
+	}
+
+	void Delete(TKey key) {
+		if (Find(key)) {
+			pRec[Curr] = Del;
+			DataCount--;
+			Eff++;
+		}
+	}
+
+	void Reset() {
+		Curr = 0;
+		while ((Curr < size) && (pRec[Curr] == Del || pRec[Curr] == Free) {
+			Curr++;
+		}
+	}
+	void GoNext() {
+		Curr++;
+		while ((Curr < size) && (pRec[Curr] == Del || pRec[Curr] == Free) {
+			Curr++;
+		}
+	}
+
+	bool IsEnd() {
+		return Curr == size;
+	}
+
 	virtual int HashFunc(TKey key)
 	{
 		return key % size;
