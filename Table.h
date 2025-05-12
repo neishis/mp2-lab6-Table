@@ -4,27 +4,21 @@
 #include <string>
 #include <sstream> 
 #include <iostream>
-    //структура табличной записи
+
     template<typename TKey, typename TVal>
     struct Record
     {
         TKey key;
         TVal val;
+
+        friend std::ostream& operator<<(std::ostream& out, const Record<TKey, TVal>& r) {
+            out << "[" << r.key << "]: " << r.val;
+            return out;
+        }
+
+        bool operator== (const Record& rec) const { return (key == rec.key && val == rec.val); }
+        bool operator!= (const Record& rec) const { return !(*this == rec); }
     };
-
-    // массивы для хранения может быть неупорядоченным и упорядоченным по ключу 
-    // два вида хэш-таблиц - таблиц, в которой позиция может быть вычислена по ключу
-    // два вида деревьев (сбалансированные и несбалансированные)
-
-    // поиск вставка удаление - должны присутствовать во всех этих таблицах
-
-    // поиск по ключу и удаление
-    // вставка получает все данные 
-
-    // ключ должен быть уникальным
-
-    // ветки наследования будут разные для базового класса
-
     template<typename TKey, typename TVal>
     class Table 
     {
@@ -52,7 +46,7 @@
             return false;
         }
 
-        virtual bool IsFull() const = 0; // значит данный метод не имеет здесь реализации а класс становится абстрактным 
+        virtual bool IsFull() const = 0;
 
         virtual bool Find(TKey key) = 0;
         virtual void Insert(Record <TKey, TVal> rec) = 0;
@@ -63,14 +57,12 @@
         virtual bool IsEnd() = 0;
 
         virtual Record <TKey, TVal> getCurr() = 0;
-        virtual TKey getCurrKey() = 0;
-        virtual TVal getCurrVal() = 0;
 
-        friend std::ostream& operator<<(std::ostream& os, const Table& t)
+        friend std::ostream& operator<<(std::ostream& os, Table<TKey, TVal>& t)
         {
             for (t.Reset(); !t.IsEnd(); t.GoNext())
             {
-                os << t.GetCurr() << std :: endl;
+                os << t.getCurr() << std :: endl;
             }
             return os;
         }

@@ -1,9 +1,6 @@
 #pragma once
 #include "Table.h"
 
-//Массив
-
-//оператор присваивания 
 template<typename TKey, typename TVal>
 class ArrayTable : public Table <TKey, TVal>
 {
@@ -13,31 +10,33 @@ protected:
 
 public:
 
-	ArrayTable(int _size = 10)  : Table() // Конструктор инициализации
+	ArrayTable(int _size = 10)  : Table() 
 	{
 		size = _size;
 		pRec = new Record <TKey, TVal>[size];
 		Curr = -1;
+		this->DataCount = 0;
 	}
 
-	ArrayTable(const ArrayTable& at) // Конструктор копирования
+	ArrayTable(const ArrayTable& at) 
 	{
 		size = at.size;
 		Curr = at.Curr;
+		this->DataCount = at.DataCount;
+		this->Eff = at.Eff;
 		pRec = new Record <TKey, TVal>[size];
 		for (int i = 0; i < size; i++) {
 			pRec[i] = at.pRec[i];
 		}
 	}
 
-	~ArrayTable() { delete[] pRec;} // Деструктор
+	~ArrayTable() { delete[] pRec;} 
 
-	/*Record getCurr() { return Curr->key; } // Возвращаем позицию*/
+	bool IsFull() const { return this->DataCount >= size; }
+	Record<TKey, TVal> getCurr() const { return pRec[Curr]; };
 
-	virtual bool IsFull() const { return DataCount >= size; } // Массив заполнен
-
-	void Reset() { Curr = 0; } // Переход в начало
-	void GoNext() { Curr++; } // Ход вперед
-	bool IsEnd() { return DataCount == Curr;} // Конец
+	void Reset() { Curr = 0; }
+	void GoNext() { Curr++; }
+	bool IsEnd() { return this->DataCount == Curr;}
 };
 

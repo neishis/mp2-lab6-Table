@@ -1,23 +1,23 @@
 #pragma once
-#include "Table.h"
+#include "HashTable.h"
 
 
 template<typename TKey, typename TVal>
 class ArrayHashTable : public HashTable <TKey, TVal>
 {
 protected:
-	Record<Tkey, Tval>* pRec;
-	Record<Tkey, Tval> Free, Del;
+	Record<TKey, TVal>* pRec;
+	Record<TKey, TVal> Free, Del;
 	int step, Curr;
 public:
 
-	ArrayHashTable(int _size, int _step = 13)
+	ArrayHashTable(int _size, int _step = 13) : HashTable(_size)
 	{
 		size = _size;
-		sterp = _step;
-		pRec = new Record[_size];
-		Free = Record(-1);
-		Del = Record(-2);
+		step = _step;
+		pRec = new Record<TKey, TVal>[_size];
+		Free.key = -1;
+		Del.key = -2;
 		for (int i = 0; i < size; i++) {
 			pRec[i] = Free;
 		}
@@ -25,21 +25,21 @@ public:
 
 	~ArrayHashTable() 
 	{
-		delete[] pRecs;
+		delete[] pRec;
 	}
 
-	bool IsFull() 
+	bool IsFull() const override
 	{
 		if (DataCount == size) return 1;
 		else return 0;
 	}
 
-	bool Find(TKey key)
+	bool Find(TKey key) override
 	{
 		Curr = HashFunc(key);
 		int tmp = -1;
 		for (int i = 0; i < size; i++) {
-			eff++;
+			Eff++;
 			if (pRec[Curr] == Free) break;
 			else if (pRec[Curr] == Del && tmp == -1) tmp = Curr;
 			else if (pRec[Curr].key == key) return true;
@@ -49,15 +49,16 @@ public:
 		return false;
 	}
 
-	bool Insert(Record& rec) {
-		if (Find(rec.key)) throw - 1;
+	void Insert(Record<TKey, TVal> rec)  override 
+	{
+		if (Find(rec.key)) return;
 		pRec[Curr] = rec;
 		DataCount++;
 		Eff++;
-		return true;
 	}
 
-	void Delete(TKey key) {
+	void Delete(TKey key) override 
+	{
 		if (Find(key)) {
 			pRec[Curr] = Del;
 			DataCount--;
@@ -65,26 +66,27 @@ public:
 		}
 	}
 
-	void Reset() {
+	void Reset() override 
+	{
 		Curr = 0;
-		while ((Curr < size) && (pRec[Curr] == Del || pRec[Curr] == Free) {
+		while ((Curr < size) && (pRec[Curr] == Del || pRec[Curr] == Free)) {
 			Curr++;
 		}
 	}
-	void GoNext() {
+	void GoNext() override 
+	{
 		Curr++;
-		while ((Curr < size) && (pRec[Curr] == Del || pRec[Curr] == Free) {
+		while ((Curr < size) && (pRec[Curr] == Del || pRec[Curr] == Free)) {
 			Curr++;
 		}
 	}
 
-	bool IsEnd() {
+	bool IsEnd() override {
 		return Curr == size;
 	}
 
-	virtual int HashFunc(TKey key)
-	{
-		return key % size;
+	Record<TKey, TVal> getCurr() override {
+		return pRec[Curr];
 	}
 
 };

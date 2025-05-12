@@ -129,11 +129,13 @@
   <ItemGroup>
     <ClInclude Include="ArrayHashTable.h" />
     <ClInclude Include="ArrayTable.h" />
+    <ClInclude Include="BalTreeTable.h" />
     <ClInclude Include="HashTable.h" />
     <ClInclude Include="ListHashTable.h" />
     <ClInclude Include="ScanTable.h" />
     <ClInclude Include="SortTable.h" />
     <ClInclude Include="Table.h" />
+    <ClInclude Include="TreeTable.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ArrayTable.cpp" />

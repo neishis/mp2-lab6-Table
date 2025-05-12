@@ -8,14 +8,15 @@ class ScanTable : public ArrayTable <TKey, TVal>
 {
 public:
 
-	ScanTable(int _size) : ArrayTable(_size) {} //конструктор инициализации
+	ScanTable(int _size) : ArrayTable(_size) {}
 
-	bool Find(TKey key) //Поиск по ключу
+	bool Find(TKey key)
 	{
 		for (int i = 0; i < DataCount; i++) {
 			Eff++;
 			if (key == pRec[i].key) {
 				Curr = i;
+				Eff++;
 				return true;
 			}
 		}
@@ -23,8 +24,9 @@ public:
 		return false;
 	}
 
-	void Insert(Record <TKey, TVal> rec) //Добавление элемента 
+	void Insert(Record <TKey, TVal> rec)
 	{
+		if (IsFull()) throw - 1;
 		if (Find(rec.key)) {
 			throw - 1;
 		}
@@ -33,15 +35,20 @@ public:
 		DataCount++;
 	}
 
-	void Delete(TKey key) // Удаление по ключу
+	void Delete(TKey key)
 	{
 		if (Find(key) == 0) {
-			throw - 1;
+			return;
 		}
 		else {
 			pRec[Curr] = pRec[DataCount - 1];
 			DataCount--;
+			Eff++;
 		}
+	}
+
+	Record<TKey, TVal> getCurr() {
+		return pRec[Curr];
 	}
 };
 

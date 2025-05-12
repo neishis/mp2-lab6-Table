@@ -1,7 +1,6 @@
 #pragma once
 #include "Table.h"
 
-//Упорядоченная таблица
 
 template<typename TKey, typename TVal>
 class SortTable : public ScanTable <TKey, TVal>
@@ -10,31 +9,31 @@ public:
 
 	SortTable(int _size) : ScanTable(_size) {};
 
-	bool Find(Tkey key) //Поиск в упорядоченной таблице
+	bool Find(TKey key) 
 	{
-		int start = 0; finish = DataCount - 1;
+		int start = 0, finish = DataCount - 1;
 		while (start <= finish) {
-			eff++;
+			Eff++;
 			int ind = (start + finish) / 2;
 			if (pRec[ind].key > key) {
 				finish = ind-1;
 			}
-			else if { pRec[ind].key < key} {
+			else if (pRec[ind].key < key) {
 				start = ind + 1;
 			}
 			else {
 				Curr = ind;
 				return true;
 			}
-			Curr = start;
-			return false;
 		}
+		Curr = start;
+		return false;
 	}
 
-	void Insert(Record rec) // Добавление в упорядоченную таблицу
+	void Insert(Record<TKey, TVal> rec)
 	{
 		bool res = Find(rec.key);
-		if (res == true) throw - 1;
+		if (res == true) return;
 		else {
 			for(int i = DataCount; i > Curr; i--) {
 				pRec[i] = pRec[i - 1];
@@ -42,23 +41,29 @@ public:
 			}
 			pRec[Curr] = rec;
 			DataCount++;
+			Eff++;
 		}
 	}
 
-	void Delete(Tkey key) // Удаление из упорядоченной таблицы
+	void Delete(TKey key) 
 	{
-		bool res = Find(rec.key);
-		if (res == false) throw - 1;
+		bool res = Find(key);
+		if (res == false) return;
 		else {
 			for (int i = Curr; i < DataCount-1; i++) {
 				pRec[i] = pRec[i + 1];
 				Eff++;
 			}
 			DataCount--;
+			Eff++;
 		}
 	}
 
-	void SelectSort() // Сортировка выбором
+	Record<TKey, TVal> getCurr() {
+		return pRec[Curr];
+	}
+
+	void SelectSort()
 	{
 		int i = 0, j = 0;
 		while (i < DataCount) {
@@ -71,7 +76,7 @@ public:
 					k = j;
 				}
 				j++;
-				eff++;
+				Eff++;
 			}
 			Record rec = pRec[k];
 			pRec[k] = pRec[i];
@@ -103,8 +108,8 @@ public:
 				Right--;
 			}
 		}
-		if (start < left) QSortRec(start, Left);
-		if (right < finish) QSortRec(Right, finish);
+		if (start < Left) QSortRec(start, Left);
+		if (Right < finish) QSortRec(Right, finish);
 
 	}
 
